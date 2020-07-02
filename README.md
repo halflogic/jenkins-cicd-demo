@@ -26,42 +26,58 @@ https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html \
 https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9 \
 https://www.jenkins.io/doc/book/installing
 
-Create an ec2 instance with Amazon Linux 2 and run the following:
+1. Create an ec2 instance with Amazon Linux 2, t3.micro would be fine for this demo. You may need a larger instance once your demand increases.
 
-```
-# docker installation
-sudo yum update -y
-sudo amazon-linux-extras install docker -y
-sudo service docker start
-sudo usermod -a -G docker ec2-user
-sudo chkconfig docker on
-sudo yum install -y git
-# logout/restart
+2. Install and configure docker. and run jenkins in a container.
 
-sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-docker-compose version  # verify
+   ```
+   # docker installation
+   sudo yum update -y
+   sudo amazon-linux-extras install docker -y
+   sudo service docker start
+   sudo usermod -a -G docker ec2-user
+   sudo chkconfig docker on
+   sudo yum install -y git
+   # logout/restart
+   ```
 
-# jenkins installation
-https://www.jenkins.io/doc/book/installing/
-docker network create jenkins
-docker volume create jenkins-docker-certs
-docker volume create jenkins-data
+3. Install docker-compose and run jenkins and blueocean in separate containers.\
+   To do: Setup docker-compose yaml.
 
-docker container run --name jenkins-docker --rm --detach \
-  --privileged --network jenkins --network-alias docker \
-  --env DOCKER_TLS_CERTDIR=/certs \
-  --volume jenkins-docker-certs:/certs/client \
-  --volume jenkins-data:/var/jenkins_home \
-  --publish 2376:2376 docker:dind
-  
-docker container run --name jenkins-blueocean --rm --detach \
-  --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
-  --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
-  --volume jenkins-data:/var/jenkins_home \
-  --volume jenkins-docker-certs:/certs/client:ro \
-  --publish 8080:8080 --publish 50000:50000 jenkinsci/blueocean  
-```
+   ```
+   # docker-compose installation
+   sudo curl -L https://github.com/docker/compose/releases/latest/   download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/   docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   docker-compose version  # verify
+   
+   # jenkins installation
+   https://www.jenkins.io/doc/book/installing/
+   docker network create jenkins
+   docker volume create jenkins-docker-certs
+   docker volume create jenkins-data
+   
+   docker container run --name jenkins-docker --detach \
+     --restart unless-stopped \
+     --privileged --network jenkins --network-alias docker \
+     --env DOCKER_TLS_CERTDIR=/certs \
+     --volume jenkins-docker-certs:/certs/client \
+     --volume jenkins-data:/var/jenkins_home \
+     --publish 2376:2376 docker:dind
+     
+   docker container run --name jenkins-blueocean --detach \
+     --restart unless-stopped \
+     --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
+     --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
+     --volume jenkins-data:/var/jenkins_home \
+     --volume jenkins-docker-certs:/certs/client:ro \
+     --publish 8080:8080 --publish 50000:50000 jenkinsci/blueocean  
+
+   # get the initialAdminPassword
+   docker exec -it $(docker ps -aqf "name=jenkins-blueocean") cat /var/jenkins_home/secrets/initialAdminPassword
+   ```
+
+4. Grab the IP of your ec2 instance and go through the Jenkins setup wizard.\
+   http://[ec2-instance-ip]:8080
 
 
 

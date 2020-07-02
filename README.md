@@ -23,7 +23,7 @@ Here's a few details on the process involved during application code build and d
 References: \
 https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html \
 https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9 \
-https://www.jenkins.io/doc/book/installing
+https://www.jenkins.io/doc/book/installing \
 https://github.com/jenkinsci/docker/blob/master/README.md
 
 1. Create an ec2 instance with Amazon Linux 2, t3.small would be fine for this demo. You may need a larger instance once your demand increases.
@@ -84,7 +84,7 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 
 To do
 
-## Setup Credentials in Jenkins
+## Setup Credential in Jenkins
 
 To do
 

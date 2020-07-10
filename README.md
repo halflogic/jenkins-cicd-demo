@@ -3,6 +3,7 @@
 For an introduction on CI/CD, here's a great write up from Atlassian that you can read on:\
 https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment
 
+
 ## Overview
 
 In this demo, we will be creating jobs in Jenkins that will handle application code build and deploying it to a Docker Container and Kubernetes cluster in AWS EKS. 
@@ -17,6 +18,7 @@ The diagram below is high-level overview of how CI/CD pipelines may be applied t
 Here's a few details on the process involved during application code build and deployment. Infrastructure as Code (IaC) is also integrated in the build process that contains deployment configurations for the k8s pods.
 
 <img src="images/build-deploy.png" width="700" height="">
+
 
 ## Create the Jenkins server
 
@@ -59,12 +61,14 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 4. Grab the IP of the ec2 instance and open Jenkins in a browser: http://your-ec2-instance-ip:8080 \
    Go through the Jenkins setup wizard, install the recommended plugins and setup an admin user.
 
+
 ## Code Build and Deployment Requirements
 
 1. Git Repository - Create a [GitHub](http://github.com) account
 2. Container Image Registry - Create a [Dockerhub](https://hub.docker.com/) account 
 3. Web Server - Create AWS EC2 Instance for Docker deployment example
 4. Kubernetes Cluster - [Create AWS EKS for](https://github.com/halflogic/aws-eks-demo)  Kubernetes deployment example
+
 
 ## Create GitHub Token
 
@@ -78,6 +82,7 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 
 3. Copy the generated token and save it in a secure way.
 
+
 ## Setup Credentials in Jenkins
 
 1. Open Jenkins > Manage Jenkins > Manage Credentials
@@ -87,6 +92,7 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 3. Add all the required credentials for github, dockerhub, webserver.. etc.
 
    <img src="images/jenkins-credentials.png" width="700" height="">
+
 
 ## Create Pipeline Job
 
@@ -144,15 +150,16 @@ https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy/blob/mast
 
 1. Create a new Pipeline job using the same steps above
 
-2. In the Pipeline section, we'll select "Pipeline script from SCM" and enter the required parameters:
-   Repository URL: https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy
-   Credentials: Select your Github key
-   Branch: master
+2. In the Pipeline section, we'll select "Pipeline script from SCM" and enter the required parameters:\
+   Repository URL: https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy\
+   Credentials: Select your Github key\
+   Branch: master\
    Script Path: Jenkinsfile
    
    <img src="images/pipeline-jenkinsfile.png" width="700" height="">
 
 3. Save and run Build Now.
+
 
 ## Pipeline Build and Kubernetes Deployment
 

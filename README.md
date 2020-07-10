@@ -28,7 +28,7 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 
 1. Create an ec2 instance with Amazon Linux 2, t3.small would be fine for this demo. You may need a larger instance once your demand increases.
 
-2. Install and configure docker. and run jenkins in a container.
+2. Install and configure docker.
 
    ```
    # docker installation
@@ -41,36 +41,16 @@ https://github.com/jenkinsci/docker/blob/master/README.md
    # logout/restart
    ```
 
-3. Install docker-compose, then build and run the jenkins container.\
-   To do: Setup docker-compose yaml.
+3. Setup Jenkins. For this step, Jenkins will be pulled from a [custom docker image](https://github.com/halflogic/jenkins-docker) that has all the requirements to run the build examples.\
+   https://github.com/halflogic/jenkins-docker
 
    ```
-   # docker-compose installation
-   sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-   sudo chmod +x /usr/local/bin/docker-compose
-   docker-compose version  # verify
-   
-   # jenkins installation
-   https://www.jenkins.io/doc/book/installing/
-   docker network create jenkins
-   docker volume create jenkins-docker-certs
-   docker volume create jenkins-data
-   
-   docker container run --name jenkins-docker --detach \
-     --restart unless-stopped \
-     --privileged --network jenkins --network-alias docker \
-     --env DOCKER_TLS_CERTDIR=/certs \
-     --volume jenkins-docker-certs:/certs/client \
-     --volume jenkins-data:/var/jenkins_home \
-     --publish 2376:2376 docker:dind
-     
-   docker container run --name jenkins-lts --detach \
-     --restart unless-stopped \
-     --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
-     --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
-     --volume jenkins-data:/var/jenkins_home \
-     --volume jenkins-docker-certs:/certs/client:ro \
-     --publish 8080:8080 --publish 50000:50000 jenkins/jenkins:lts
+   # run jenkins in detached mode
+   docker container run -p 8080:8080 -p 50000:50000 \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --restart unless-stopped --detach \
+    --name jenkins-docker halflogic/jenkins-docker
 
    # get the initialAdminPassword
    docker exec -it $(docker ps -aqf "name=jenkins-lts") cat /var/jenkins_home/secrets/initialAdminPassword
@@ -79,16 +59,70 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 4. Grab the IP of the ec2 instance and open Jenkins in a browser: http://your-ec2-instance-ip:8080 \
    Go through the Jenkins setup wizard, install the recommended plugins and setup an admin user.
 
+## Code Build and Deployment Requirements
 
-## Create Github Token
+1. Git Repository - Create a [GitHub](http://github.com) account
+2. Container Image Registry - Create a [Dockerhub](https://hub.docker.com/) account 
+3. Web Server - Create AWS EC2 Instance for Docker deployment example
+4. Kubernetes Cluster - [Create AWS EKS for](https://github.com/halflogic/aws-eks-demo)  Kubernetes deployment example
 
-To do
+## Create GitHub Token
 
-## Setup Credential in Jenkins
+1. Login to your GitHub account. \
+   Go to Settings > Developer settings > Personal access tokens > Generate new token
 
-To do
+2. Select the check boxes for the following scopes:
+   - repo: (check all boxes)
+   - admin:repo_hook (check all boxes)
+   - user: user:email (check user:email box only)
+
+3. Copy the generated token and save it in a secure way.
+
+## Setup Credentials in Jenkins
+
+1. Open Jenkins > Manage Jenkins > Manage Credentials
+
+2. Under Stores scoped to Jenkins, click on (global)
+
+3. Add all the required credentials for github, dockerhub, webserver.. etc.
+
+   <img src="images/jenkins-credentials.png" width="700" height="">
 
 ## Create Pipeline Job
 
-To do
+Create a pipeline job to test if docker commands can be executed within Jenkins.
+
+1. Jenkins > New Item > Enter an item name: hello-docker
+
+2. Click Pipeline > click [ OK ]
+
+3. In the Pipeline script text area, enter the code below and click [ Save ]
+   ```
+   pipeline {
+       agent any
+   
+       stages {
+           stage('Hello Docker') {
+               steps {
+                   echo 'Hello Docker'
+               }
+           }
+           stage('Run Docker') {
+               steps {
+                   script {
+                       sh '''
+                       docker info
+                       docker images
+                       '''
+                   }
+               }
+           }
+       }
+   }
+   ```
+
+4. Click [ Build Now ] \
+   Once the build completes, click on the pipeline logs to inspect the output
+
+   <img src="images/pipeline-hello-docker.png" width="700" height="">
 

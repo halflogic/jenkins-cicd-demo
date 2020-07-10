@@ -99,7 +99,7 @@ Create a pipeline job to test if docker commands can be executed within Jenkins.
 
 2. Click Pipeline > click [ OK ]
 
-3. In the Pipeline script text area, enter the code below and click [ Save ]
+3. In the "Pipeline script" text area, enter the code below and click [ Save ]
    ```
    pipeline {
        agent any
@@ -132,17 +132,27 @@ Create a pipeline job to test if docker commands can be executed within Jenkins.
 
 ## Pipeline Build using Jenkinsfile
 
-Reference:
-https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+Reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
 
 This example will use a Node.js app forked from [Linux Academy](https://linuxacademy.com/) 
 
-Repository URL:
+Repository URL:\
 https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy
 
-Jenkinsfile:
+Jenkinsfile:\
 https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy/blob/master/Jenkinsfile
 
+1. Create a new Pipeline job using the same steps above
+
+2. In the Pipeline section, we'll select "Pipeline script from SCM" and enter the required parameters:
+   Repository URL: https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy
+   Credentials: Select your Github key
+   Branch: master
+   Script Path: Jenkinsfile
+   
+   <img src="images/pipeline-jenkinsfile.png" width="700" height="">
+
+3. Save and run Build Now.
 
 ## Pipeline Build and Kubernetes Deployment
 

@@ -151,7 +151,7 @@ https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy/blob/mast
 1. Create a new Pipeline job using the same steps above
 
 2. In the Pipeline section, we'll select "Pipeline script from SCM" and enter the required parameters:\
-   Repository URL: https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy\
+   Repository URL: https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy \
    Credentials: Select your Github key\
    Branch: master\
    Script Path: Jenkinsfile

@@ -5,7 +5,7 @@ https://www.atlassian.com/continuous-delivery/principles/continuous-integration-
 
 ## Overview
 
-In this demo, we will be creating jobs in Jenkins that will handle application code builds and deploying it to a Kubernetes cluster in AWS EKS. 
+In this demo, we will be creating jobs in Jenkins that will handle application code build and deploying it to a Docker Container and Kubernetes cluster in AWS EKS. 
 
 For creating the Kubernetes cluster, please refer to the AWS EKS Demo guide here:\
 https://github.com/halflogic/aws-eks-demo
@@ -90,6 +90,9 @@ https://github.com/jenkinsci/docker/blob/master/README.md
 
 ## Create Pipeline Job
 
+Reference:
+https://www.jenkins.io/doc/book/pipeline/
+
 Create a pipeline job to test if docker commands can be executed within Jenkins.
 
 1. Jenkins > New Item > Enter an item name: hello-docker
@@ -125,4 +128,23 @@ Create a pipeline job to test if docker commands can be executed within Jenkins.
    Once the build completes, click on the pipeline logs to inspect the output
 
    <img src="images/pipeline-hello-docker.png" width="700" height="">
+
+
+## Pipeline Build using Jenkinsfile
+
+Reference:
+https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+
+This example will use a Node.js app forked from [Linux Academy](https://linuxacademy.com/) 
+
+Repository URL:
+https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy
+
+Jenkinsfile:
+https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy/blob/master/Jenkinsfile
+
+
+## Pipeline Build and Kubernetes Deployment
+
+To do
 

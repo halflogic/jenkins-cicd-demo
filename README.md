@@ -164,4 +164,10 @@ https://github.com/halflogic/cicd-pipeline-train-schedule-dockerdeploy/blob/mast
 ## Pipeline Build and Kubernetes Deployment
 
 To do
-
+- Install kubernetes-deploy jenkins plugin
+- Add kubeconfig in jenkins credential
+- Fork repo: 
+  https://github.com/linuxacademy/cicd-pipeline-train-schedule-kubernetes
+- Setup pipeline job
+- Kubernetes deployment 
+  https://github.com/linuxacademy/cicd-pipeline-train-schedule-kubernetes/blob/example-solution/train-schedule-kube.yml
